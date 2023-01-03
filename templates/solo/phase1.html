@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>Runda 1.</h1>
+    <h2>Gracz id: {{ game.active_player }}</h2>
+    <table>
+        <tr>
+            {%  for i in range(13) %}
+               <td><img src="{{ url_for('static',
+                filename='img/cards/' + game.players[game.active_player].hand[i].image) }}" width="70%" height="10%"
+                        alt="Card image"></td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}
