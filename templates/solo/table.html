@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>Runda 1.</h1>
+    {% if game.table.cards %}
+          <div class="container">
+        {% for card in game.table.cards  %}
+                <div><img src="{{ url_for('static',filename='img/cards/' + card.image) }}"
+                  width="80px" height="120px" alt="Card image"></div>
+        {% endfor %}
+          </div>
+    {% endif %}
+{% endblock %}
