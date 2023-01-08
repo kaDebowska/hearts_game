@@ -33,7 +33,7 @@ class Deck:
 
 class Player:
     def __init__(self, name='Anonymous', mode='computer'):
-        self.player_name = name
+        self.name = name
         self.mode = mode
         self.hand = []
         self.taken_cards = []
@@ -61,15 +61,13 @@ class Table:
     def count_cards(self):
         return len(self.cards)
 class Game:
-    def __init__(self, name='Anonymous'):
+    def __init__(self, names):
         self.players = list()
-        self.players.append(Player(name, 'human')),
-        self.players.append(Player('komputer1', 'computer')),
-        self.players.append(Player('komputer2', 'computer')),
-        self.players.append(Player('komputer3', 'computer'))
         self.active_player = 0
         self.deck = Deck()
         self.table = Table()
+        for name in names:
+            self.players.append(Player(name, 'human'))
 
     def deal_cards(self):
         self.deck.shuffle()
@@ -81,44 +79,46 @@ class Game:
 def home():
     return render_template('home.html')
 
-@app.route('/solo/form', methods=['GET', 'POST'])
+@app.route('/hotseat/form', methods=['GET', 'POST'])
 def solo_form():
     if request.method == 'POST':
-       return solo_phase0(request.form.get('name'))
-    return render_template('solo/form.html')
+        players = [x for x in request.form.getlist('names') if x]
+        if len(players)==4:
+            return solo_phase0(players)
+    return render_template('hotseat/form.html')
 
 def solo_phase0(name):
     global game
     game = Game(name)
-    return redirect('/solo/phase1', code=302)
+    return redirect('/hotseat/phase1', code=302)
 
-@app.route('/solo/phase1')
+@app.route('/hotseat/phase1')
 def solo_phase1():
     game.deal_cards()
     for player in game.players:
         player.sort_hand()
-    return render_template('solo/phase1.html', game=game)
+    return render_template('hotseat/phase1.html', game=game)
 
-@app.route('/solo/table')
+@app.route('/hotseat/table')
 def table():
     if game.table.count_cards()<4:
-        return render_template('solo/throw_card.html', game=game)
+        return render_template('hotseat/throw_card.html', game=game)
     else:
-        return render_template('solo/table.html', game=game)
-@app.route('/solo/throw_card/<int:index>')
+        return render_template('hotseat/table.html', game=game)
+@app.route('/hotseat/throw_card/<int:index>')
 def throw_card(index):
     if game.table.count_cards()!=0 and game.players[game.active_player].hand[index].color!=game.table.cards[0].color:
        if [card for card in game.players[game.active_player].hand if card.color==game.table.cards[0].color]:
-        return render_template('solo/throw_card.html', game=game)
+        return render_template('hotseat/throw_card.html', game=game)
     game.table.put_on_table(game.players[game.active_player].hand[index])
     game.players[game.active_player].draw(index)
-    return redirect('/solo/next_player', code=302)
+    return redirect('/hotseat/next_player', code=302)
 
-@app.route('/solo/next_player')
+@app.route('/hotseat/next_player')
 def next_player():
     game.active_player += 1
     game.active_player %= 4
-    return redirect('/solo/table', code=302)
+    return redirect('/hotseat/table', code=302)
 
 if __name__ == '__main__':
     app.run(host='wierzba.wzks.uj.edu.pl', port=5103, debug=True)
