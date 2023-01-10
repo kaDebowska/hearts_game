@@ -9,4 +9,9 @@
         {% endfor %}
           </div>
     {% endif %}
+    <h1>Karty wędrują do gracza {{ game.players[player_index].name }}</h1>
+    <div class="container">
+    <a href="{{ url_for("hotseat_phase1") }}"><button type="button" class="btn btn-primary">Kontynuuj</button></a>
+    </div>
+
 {% endblock %}
