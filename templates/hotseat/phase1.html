@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-    <h1>Runda 1.</h1>
+    <h1>Runda {{ game.round }} - {{ game.rounds[game.round] }}</h1>
     <h2>Gracz: {{ game.players[game.active_player].name }}</h2>
     <div class="container">
             {%  for i in range(game.players[game.active_player].count_player_cards()) %}

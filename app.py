@@ -25,9 +25,10 @@ def solo_phase0(name):
 
 @app.route('/hotseat/phase1')
 def hotseat_phase1():
-    if game.players[3].count_player_cards()==0:
+    if len([player for player in game.players if player.count_player_cards()>0])==0 and game.round < 7:
         game.new_round()
         game.deal_cards()
+        game.active_player = (game.round - 1)%4
         for player in game.players:
             player.sort_hand()
     game.table.cards = []

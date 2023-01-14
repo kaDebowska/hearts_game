@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-    <h1>Runda 1.</h1>
+    <h1>Runda {{ game.round }} - {{ game.rounds[game.round] }}</h1>
     {% if game.table.cards %}
           <div class="container">
         {% for card in game.table.cards  %}
