@@ -5,7 +5,8 @@ class Player:
         self.hand = []
         self.taken_cards = []
         self.thrown_cards = []
-        self.points = 0
+        self.round_points = [0,0,0,0,0,0,0]
+        self.total_points = 0
 
     def add_to_hand(self, card):
         self.hand.append(card)
@@ -25,3 +26,4 @@ class Player:
 
     def count_player_cards(self):
         return len(self.hand)
+

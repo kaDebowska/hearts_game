@@ -25,12 +25,13 @@ def solo_phase0(name):
 
 @app.route('/hotseat/phase1')
 def hotseat_phase1():
-    if len([player for player in game.players if player.count_player_cards()>0])==0 and game.round < 7:
+    if game.round ==0:
         game.new_round()
         game.deal_cards()
-        game.active_player = (game.round - 1)%4
         for player in game.players:
             player.sort_hand()
+    if len([player for player in game.players if player.count_player_cards() > 0])==0 and 7 >= game.round > 0:
+        return redirect('/hotseat/end_of_round', code=302)
     game.table.cards = []
     return render_template('hotseat/phase1.html', game=game)
 
@@ -62,6 +63,30 @@ def throw_card(index):
     game.players[game.active_player].throw(index)
     return redirect('/hotseat/next_player', code=302)
 
+@app.route('/hotseat/end_of_round')
+def end_of_round():
+    game.rounds_points[game.round](game.round-1)
+    for player in game.players:
+        player.hand = []
+    if game.round < 7:
+        game.new_round()
+        game.deal_cards()
+        game.active_player = (game.round - 1) % 4
+        for player in game.players:
+            player.taken_cards = []
+            player.sort_hand()
+        return render_template('hotseat/end_of_round.html', game=game)
+    else:
+        return redirect('/hotseat/end_of_game', code=302)
+
+@app.route('/hotseat/end_of_game')
+def end_of_game():
+    winner = game.players[0]
+    for player in game.players:
+        if player.total_points > winner.total_points:
+            winner = player
+    return render_template('hotseat/end_of_game.html', game=game, winner=winner)
+
 @app.route('/hotseat/next_player')
 def next_player():
     game.active_player += 1
@@ -70,3 +95,4 @@ def next_player():
 
 if __name__ == '__main__':
     app.run(host='wierzba.wzks.uj.edu.pl', port=5103, debug=True)
+
