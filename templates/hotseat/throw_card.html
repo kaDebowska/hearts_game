@@ -4,7 +4,7 @@
     <h2>Gracz: {{ game.players[game.active_player].name }}</h2>
     <div class="container">
             {%  for i in range(game.players[game.active_player].count_player_cards()) %}
-               <div><a href="{{ url_for("throw_card", index=i) }}"><img src="{{ url_for('static',
+               <div><a href="{{ url_for("hotseat_throw_card", index=i) }}"><img src="{{ url_for('static',
                 filename='img/cards/' + game.players[game.active_player].hand[i].image) }}" width="80px" height="120px"
                    alt="Card image"></a></div>
             {% endfor %}

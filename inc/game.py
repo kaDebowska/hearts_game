@@ -3,7 +3,7 @@ from inc.deck import Deck
 from inc.table import Table
 
 class Game:
-    def __init__(self, names):
+    def __init__(self, names, mode):
         self.players = list()
         self.active_player = 0
         self.deck = Deck()
@@ -27,8 +27,26 @@ class Game:
             6 : self.round6,
             7 : self.round7
         }
-        for name in names:
-            self.players.append(Player(name, 'human'))
+        self.played_cards = {
+            'karo': [],
+            'kier': [],
+            'pik': [],
+            'trefl': []
+
+        }
+        if mode == 'solo':
+            first = True
+            for name in names:
+                if first:
+                    self.players.append(Player(name, 'human'))
+                    first = False
+                else:
+                    self.players.append(Player(name, 'computer'))
+        elif mode == 'hotseat':
+            for name in names:
+                self.players.append(Player(name, 'human'))
+        else:
+            exit()
 
     def new_round(self):
        self.deck = Deck()
@@ -90,7 +108,17 @@ class Game:
 
     def deal_cards(self):
         self.deck.shuffle()
-        for i in range(1):
+        for i in range(13):
             for player in self.players:
                 player.add_to_hand(self.deck.deal())
 
+    def play(self, index):
+        self.table.put_on_table(self.players[self.active_player].hand[index])
+        self.players[self.active_player].add_to_thrown(self.players[self.active_player].hand[index])
+        self.players[self.active_player].throw(index)
+
+    def count_played_cards(self):
+        for key in self.played_cards:
+            for card in self.table.cards:
+                if card.color == key:
+                    self.played_cards[key].append(card)
