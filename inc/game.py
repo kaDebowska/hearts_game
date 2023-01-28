@@ -48,6 +48,7 @@ class Game:
         else:
             exit()
 
+
     def new_round(self):
        self.deck = Deck()
        self.round +=1
