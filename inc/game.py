@@ -8,7 +8,7 @@ class Game:
         self.active_player = 0
         self.deck = Deck()
         self.table = Table()
-        self. round = 0
+        self. round = 7
         self.rounds_names = {
             1 : 'bez lew',
             2 : 'bez kierów',

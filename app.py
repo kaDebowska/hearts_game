@@ -105,11 +105,15 @@ def solo_end_of_round():
 
 @app.route('/solo/end_of_game')
 def solo_end_of_game():
-    winner = game.players[0]
+    winners = []
+    max_points = 0
     for player in game.players:
-        if player.total_points > winner.total_points:
-            winner = player
-    return render_template('solo/end_of_game.html', game=game, winner=winner)
+        if player.total_points > max_points:
+            max_points = player.total_points
+            winners = [player]
+        elif player.total_points == max_points:
+            winners.append(player)
+    return render_template('solo/end_of_game.html', game=game, winners=winners)
 
 @app.route('/solo/next_player')
 def solo_next_player():
@@ -189,11 +193,15 @@ def hotseat_end_of_round():
 
 @app.route('/hotseat/end_of_game')
 def hotsea_end_of_game():
-    winner = game.players[0]
+    winners = []
+    max_points = 0
     for player in game.players:
-        if player.total_points > winner.total_points:
-            winner = player
-    return render_template('hotseat/end_of_game.html', game=game, winner=winner)
+        if player.total_points > max_points:
+            max_points = player.total_points
+            winners = [player]
+        elif player.total_points == max_points:
+            winners.append(player)
+    return render_template('hotseat/end_of_game.html', game=game, winners=winners)
 
 @app.route('/hotseat/next_player')
 def hotsea_next_player():
