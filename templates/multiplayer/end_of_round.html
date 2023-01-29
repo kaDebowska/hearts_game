@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 {% block body %}
-    <h1>Koniec gry</h1>
-    {% if winners|length == 1 %}
-        <h1>Zwyciężył gracz {{ winner.name }}!</h1>
-    {% else %}
-        <h1>Mamy remis</h1>
-        <h1>Zwyciężyli gracze:</h1>
-        {% for winner in winners %}
-            <h1>{{ winner.name }}</h1>
-        {% endfor %}
-    {% endif %}
     <h1>Wyniki</h1>
     <table class="table">
   <thead>
@@ -21,48 +11,62 @@
     </tr>
   </thead>
   <tbody>
+  {% if game.round>=2 %}
     <tr>
     <th scope="row">runda 1</th>
     {% for player in game.players %}
         <td>{{ player.round_points[0] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=3 %}
     <tr>
     <th scope="row">runda 2</th>
     {% for player in game.players %}
         <td>{{ player.round_points[1] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=4 %}
     <tr>
     <th scope="row">runda 3</th>
     {% for player in game.players %}
         <td>{{ player.round_points[2] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=5 %}
     <tr>
     <th scope="row">runda 4</th>
     {% for player in game.players %}
         <td>{{ player.round_points[3] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=6 %}
     <tr>
     <th scope="row">runda 5</th>
     {% for player in game.players %}
         <td>{{ player.round_points[4] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=7 %}
     <tr>
     <th scope="row">runda 6</th>
     {% for player in game.players %}
         <td>{{ player.round_points[5] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
+    {% if game.round>=8 %}
     <tr>
     <th scope="row">runda 7</th>
     {% for player in game.players %}
         <td>{{ player.round_points[6] }}</td>
     {% endfor %}
     </tr>
+    {% endif %}
   <tr>
     <th scope="row">suma</th>
     {% for player in game.players %}
@@ -72,7 +76,7 @@
   </tbody>
 </table>
 
-<div class="container">
-<a href="{{ url_for("home") }}"><button type="button" class="btn btn-primary">Nowa gra</button></a>
-</div>
+        <div class="container">
+        <a href="{{ url_for("multiplayer_phase1") }}"><button type="button" class="btn btn-primary">Następna runda</button></a>
+        </div>
 {% endblock %}

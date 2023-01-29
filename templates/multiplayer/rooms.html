@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>Stwórz nowy pokój</h1>
+    <div class="container">
+    <button type="button" class="btn btn-primary"><a href="{{ url_for('multiplayer_form') }}">NOWY POKÓJ</a></button>
+    </div>
+<h1>Dołącz do istniejącego pokoju</h1>
+    {% for room in multiplayer_games %}
+        {%  if not multiplayer_games[room].start %}
+            <div class="container">
+    <button type="button" class="btn btn-primary"><a href="{{ url_for('form_join', room=room) }}">
+                Rozgrywka utworzona przez gracza {{ multiplayer_games[room].players[0] }}
+                - graczy: {{ multiplayer_games[room].players|length }}</a></button>
+    </div>
+        {% endif %}
+    {% endfor %}
+
+
+{% endblock %}

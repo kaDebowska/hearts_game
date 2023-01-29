@@ -317,3 +317,6 @@ class Player:
             choosen_color = max(colors_count, key=colors_count.get)
             choosen_card = self.max_color(choosen_color)
         return self.hand.index(choosen_card)
+
+    def __repr__(self):
+        return self.name

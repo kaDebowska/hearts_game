@@ -2,30 +2,32 @@ from inc.player import Player
 from inc.deck import Deck
 from inc.table import Table
 
+
 class Game:
     def __init__(self, names, mode):
         self.players = list()
         self.active_player = 0
         self.deck = Deck()
         self.table = Table()
-        self. round = 0
+        self.round = 0
+        self.start = False
         self.rounds_names = {
-            1 : 'bez lew',
-            2 : 'bez kierów',
-            3 : 'bez dam',
-            4 : 'bez panów',
-            5 : 'bez króla kier',
-            6 : 'rozbójnik',
-            7 : 'odgrywka'
+            1: 'bez lew',
+            2: 'bez kierów',
+            3: 'bez dam',
+            4: 'bez panów',
+            5: 'bez króla kier',
+            6: 'rozbójnik',
+            7: 'odgrywka'
         }
         self.rounds_points = {
-            1 : self.round1,
-            2 : self.round2,
-            3 : self.round3,
-            4 : self.round4,
-            5 : self.round5,
-            6 : self.round6,
-            7 : self.round7
+            1: self.round1,
+            2: self.round2,
+            3: self.round3,
+            4: self.round4,
+            5: self.round5,
+            6: self.round6,
+            7: self.round7
         }
         self.played_cards = {
             'karo': [],
@@ -46,16 +48,30 @@ class Game:
             for name in names:
                 self.players.append(Player(name, 'human'))
         else:
-            exit()
+            for name in names:
+                self.add_player(name)
 
+
+    def players_count(self):
+        return len(self.players)
+
+    def add_player(self, name):
+        if self.start == False:
+            self.players.append( Player(name, 'human') )
+            return self.players_count()-1
+        else:
+            return -1
+
+    def start_game(self):
+        self.start = True
 
     def new_round(self):
-       self.deck = Deck()
-       self.round +=1
+        self.deck = Deck()
+        self.round += 1
 
     def round1(self, idx):
         for player in self.players:
-            player.round_points[idx] = int((len(player.taken_cards)/4)*(-20))
+            player.round_points[idx] = int((len(player.taken_cards) / 4) * (-20))
             player.total_points += player.round_points[idx]
 
     def round2(self, idx):
@@ -105,7 +121,6 @@ class Game:
         for player in self.players:
             player.round_points[idx] *= (-1)
             player.total_points += (2 * player.round_points[idx])
-
 
     def deal_cards(self):
         self.deck.shuffle()

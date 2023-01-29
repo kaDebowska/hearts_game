@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+    <form method="POST">
+    <div class="form-group mb-3">
+    <label for="name1" class="form-label">Imię gracza:</label>
+    <input name="names" class="form-control" id="name1">
+    </div>
+    <div class="form-group">
+    <input type="hidden" name="room" value="{{ room }}">
+    </div>
+    <div class="col-12 ">
+    <button type="submit" class="btn btn-primary">Dołącz do gry</button>
+    </div>
+    </form>
+    </div>
+{% endblock %}

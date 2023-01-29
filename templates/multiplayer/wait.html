@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Gracze w pokoju:</h1>
+    <div class="container">
+        <ol class="list-group list-group-numbered w-25">
+    {% for user in game.players %}
+  <li class="list-group-item">{{ user }}</li>
+    {% endfor %}
+</ol>
+    </div>
+
+
+{% if game.players|length == 4 %}
+    <div class="container">
+    <button type="button" class="btn btn-primary"><a href="{{ url_for('start_game') }}">Rozpocznij grę</a></button>
+    </div>
+
+{% endif %}
+
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+    }, 3000);
+</script>
+{% endblock %}
