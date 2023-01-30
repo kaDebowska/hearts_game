@@ -13,11 +13,12 @@ a{
     justify-content: space-around;
 }
 
-h1{
+h1, h2{
     text-align: center;
     margin-top: 20px;
 }
 
-h2{
-    margin-left: 20px;
+
+li{
+    margin-top: 20px;
 }

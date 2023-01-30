@@ -2,7 +2,7 @@
 {% block body %}
     <h1>Koniec gry</h1>
     {% if winners|length == 1 %}
-        <h1>Zwyciężył gracz {{ winner.name }}!</h1>
+        <h1>Zwyciężył gracz {{ winners[0].name }}!</h1>
     {% else %}
         <h1>Mamy remis</h1>
         <h1>Zwyciężyli gracze:</h1>

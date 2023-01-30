@@ -245,11 +245,19 @@ class Player:
         all_colors = ['karo', 'kier', 'pik', 'trefl']
         colors = all_colors.copy()
         for i in range(len(colors)):
-            if len(played_cards[colors[i]]) + self.count_by_color(colors[i]) == 13:
-                colors[i] = 0
-        colors = [i for i in colors if i != 0]
-        if len(colors) == 0 or len([x for x in self.hand if x.color in colors]) == 0:
+            suma = len(played_cards[colors[i]]) + self.count_by_color(colors[i])
+            print(suma)
+            if suma == 13:
+                print('nikt już nie ma tego koloru!!!', colors[i])
+                colors[i] = ''
+        colors = [i for i in colors if i != '']
+        print(colors)
+        player_colors = [x for x in self.hand if x.color in colors]
+        for c in player_colors:
+            print(c.color)
+        if len(colors) == 0 or len(player_colors) == 0:
             colors = all_colors
+            print(colors)
         for color in colors:
             if self.count_by_color(color) > 0:
                 colors_count[color] = self.count_by_color(color)
@@ -267,17 +275,23 @@ class Player:
         index = self.start(played_cards)
         all_colors = ['karo', 'kier', 'pik', 'trefl']
         colors = all_colors.copy()
-        if self.hand[index].color == 'kier' and self.hand[index].value > 4:
+        if (self.hand[index].color == 'kier' and self.hand[index].value > 4) or len(played_cards['kier']) + self.count_by_color('kier') == 13:
             colors.remove('kier')
             if len(colors) == 0:
                 return index
             colors_count = {}
             for i in range(len(colors)):
-                if len(played_cards[colors[i]]) + self.count_by_color(colors[i]) == 13:
-                    colors[i] = 0
-            colors = [i for i in colors if i != 0]
-            if len(colors) == 0 or len([x for x in self.hand if x.color in colors]) == 0:
+                suma = len(played_cards[colors[i]]) + self.count_by_color(colors[i])
+                if suma == 13:
+                    print('nikt już nie ma tego koloru!!!', colors[i])
+                    colors[i] = ''
+            colors = [i for i in colors if i != '']
+            print(colors)
+            player_colors = [x for x in self.hand if x.color in colors]
+            print(player_colors)
+            if len(colors) == 0 or len(player_colors) == 0:
                 colors = all_colors
+                print(colors)
             for color in colors:
                 if self.count_by_color(color) > 0:
                     colors_count[color] = self.count_by_color(color)

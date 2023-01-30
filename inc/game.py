@@ -67,6 +67,7 @@ class Game:
 
     def new_round(self):
         self.deck = Deck()
+        self.played_cards = {'karo': [],'kier': [],'pik': [],'trefl': []}
         self.round += 1
 
     def round1(self, idx):

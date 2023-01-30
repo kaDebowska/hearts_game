@@ -58,11 +58,15 @@ def solo_phase1():
         return redirect('/solo/end_of_round', code=302)
     if games[session['key']] .table.count_cards() == 4:
         games[session['key']] .table.cards = []
+    if games[session['key']].round == 5:
+        for card in games[session['key']].played_cards['kier']:
+            if card.value == 13:
+                return redirect('/solo/end_of_round', code=302)
     if games[session['key']] .players[games[session['key']] .active_player].mode == 'computer':
         if games[session['key']] .table.count_cards() != 0:
             for card in games[session['key']] .players[games[session['key']] .active_player].hand:
                 if card.color == games[session['key']] .table.cards[0].color:
-                    if games[session['key']] .round == 7:
+                    if games[session['key']].round == 7:
                         index = games[session['key']] .players[games[session['key']] .active_player].tactic_have_color[games[session['key']] .round](games[session['key']] .table.cards, card,
                                                                                                games[session['key']] .played_cards)
                         games[session['key']] .play(index)
@@ -189,6 +193,10 @@ def hotseat_phase1():
         return redirect('/hotseat/end_of_round', code=302)
     if games[session['key']].table.count_cards() == 4:
         games[session['key']].table.cards = []
+    if games[session['key']].round == 5:
+        for card in games[session['key']].played_cards['kier']:
+            if card.value == 13:
+                return redirect('/solo/end_of_round', code=302)
     return render_template('hotseat/throw_card.html', game=games[session['key']])
 
 @app.route('/hotseat/throw_card/<int:index>')
