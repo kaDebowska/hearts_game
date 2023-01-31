@@ -54,6 +54,7 @@ def solo_new_game(name):
 def solo_phase1():
     if not check():
         return redirect('/', code=302)
+    session['last_page'] = 'phase1'
     if len([player for player in games[session['key']] .players if player.count_player_cards() > 0]) == 0 and games[session['key']] .round <= 7:
         return redirect('/solo/end_of_round', code=302)
     if games[session['key']] .table.count_cards() == 4:
@@ -61,6 +62,7 @@ def solo_phase1():
     if games[session['key']].round == 5:
         for card in games[session['key']].played_cards['kier']:
             if card.value == 13:
+                session['last_page'] = 'throw_card'
                 return redirect('/solo/end_of_round', code=302)
     if games[session['key']] .players[games[session['key']] .active_player].mode == 'computer':
         if games[session['key']] .table.count_cards() != 0:
@@ -70,17 +72,20 @@ def solo_phase1():
                         index = games[session['key']] .players[games[session['key']] .active_player].tactic_have_color[games[session['key']] .round](games[session['key']] .table.cards, card,
                                                                                                games[session['key']] .played_cards)
                         games[session['key']] .play(index)
+                        session['last_page'] = 'throw_card'
                         return redirect('/solo/next_player', code=302)
                     index = games[session['key']] .players[games[session['key']] .active_player].tactic_have_color[games[session['key']] .round](games[session['key']] .table.cards, card)
                     games[session['key']] .play(index)
+                    session['last_page'] = 'throw_card'
                     return redirect('/solo/next_player', code=302)
             index = games[session['key']] .players[games[session['key']] .active_player].tactic_lack_of_color[games[session['key']] .round]()
             games[session['key']] .play(index)
+            session['last_page'] = 'throw_card'
             return redirect('/solo/next_player', code=302)
         else:
             index = games[session['key']] .players[games[session['key']] .active_player].tactic_start[games[session['key']] .round](games[session['key']] .played_cards)
             games[session['key']] .play(index)
-
+            session['last_page'] = 'throw_card'
             return redirect('/solo/next_player', code=302)
     else:
         return render_template('solo/throw_card.html', game=games[session['key']] )
@@ -88,12 +93,19 @@ def solo_phase1():
 
 @app.route('/solo/throw_card/<int:index>')
 def solo_throw_card(index):
+    if session['last_page'] != 'phase1':
+        return render_template('solo/fairplay.html', game=games[session['key']])
     if not check():
         return redirect('/', code=302)
-    if games[session['key']] .table.count_cards() != 0 and games[session['key']].players[games[session['key']].active_player].hand[index].color != games[session['key']].table.cards[0].color:
+    if index >= len(games[session['key']].players[games[session['key']].active_player].hand):
+        print('nie ma indeksu!!!')
+        return render_template('solo/throw_card.html', game=games[session['key']])
+    if games[session['key']] .table.count_cards() != 0 and \
+            games[session['key']].players[games[session['key']].active_player].hand[index].color != games[session['key']].table.cards[0].color:
         if [card for card in games[session['key']] .players[games[session['key']] .active_player].hand if card.color == games[session['key']] .table.cards[0].color]:
             return render_template('solo/throw_card.html', game=games[session['key']])
     games[session['key']].play(index)
+    session['last_page'] = 'throw_card'
     return redirect('/solo/next_player', code=302)
 
 
@@ -101,6 +113,8 @@ def solo_throw_card(index):
 def solo_table():
     if not check():
         return redirect('/', code=302)
+    if session['last_page'] != 'throw_card':
+        return render_template('solo/fairplay.html', game=games[session['key']])
     if games[session['key']].table.count_cards() < 4:
         return redirect('/solo/phase1', code=302)
     else:
@@ -189,6 +203,7 @@ def hotseat_new_game(name):
 def hotseat_phase1():
     if not check():
         return redirect('/', code=302)
+    session['last_page'] = 'phase1'
     if len([player for player in games[session['key']].players if player.count_player_cards() > 0]) == 0 and games[session['key']].round <= 7:
         return redirect('/hotseat/end_of_round', code=302)
     if games[session['key']].table.count_cards() == 4:
@@ -201,20 +216,27 @@ def hotseat_phase1():
 
 @app.route('/hotseat/throw_card/<int:index>')
 def hotseat_throw_card(index):
+    if session['last_page'] != 'phase1':
+        return render_template('hotseat/fairplay.html', game=games[session['key']])
     if not check():
         return redirect('/', code=302)
+    if index >= len(games[session['key']].players[games[session['key']].active_player].hand):
+        return render_template('solo/throw_card.html', game=games[session['key']])
     if games[session['key']].table.count_cards() != 0 and games[session['key']].players[games[session['key']].active_player].hand[index].color != games[session['key']].table.cards[0].color:
         if [card for card in games[session['key']].players[games[session['key']].active_player].hand if card.color == games[session['key']].table.cards[0].color]:
             return render_template('hotseat/throw_card.html', game=games[session['key']])
     games[session['key']].play(index)
+    session['last_page'] = 'throw_card'
     return redirect('/hotseat/next_player', code=302)
 @app.route('/hotseat/table')
 def hotseat_table():
     if not check():
         return redirect('/', code=302)
+    if session['last_page'] != 'throw_card':
+        return render_template('hotseat/fairplay.html', game=games[session['key']])
     if games[session['key']].table.count_cards() < 4:
-        return render_template('hotseat/throw_card.html', game=games[session['key']])
-    if games[session['key']].table.count_cards() == 4:
+        return redirect('/hotseat/phase1', code=302)
+    else:
         strongest_card = games[session['key']].table.cards[0]
         player_index = -1
         for card in games[session['key']].table.cards:
